@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 print(os.listdir("./input"))
 
-FIG_WIDTH = 20  # Width of figure
+FIG_WIDTH = 64  # Width of figure
 HEIGHT_PER_ROW = 3  # Height of each row when showing a figure which consists of multiple rows
-RESIZE_DIM = 28  # The images will  to 28x28 pixels
+RESIZE_DIM = 64  # The images will  to 28x28 pixels
 
 data_dir = os.path.join('.', 'input')
 paths_train_a = glob.glob(os.path.join(data_dir, 'training-a', '*.png'))
@@ -26,7 +26,13 @@ paths_train_d = glob.glob(os.path.join(data_dir, 'training-d', '*.png'))
 paths_train_f = glob.glob(os.path.join(data_dir, 'training-f', '*.png'))
 paths_train_g = glob.glob(os.path.join(data_dir, 'training-g', '*.png'))
 paths_train_h = glob.glob(os.path.join(data_dir, 'training-h', '*.png'))
-paths_train_all = paths_train_a + paths_train_b + paths_train_c + paths_train_d + paths_train_e + paths_train_f + paths_train_g + paths_train_h
+paths_train_i = glob.glob(os.path.join(data_dir, 'training-i', '*.png'))
+paths_train_j = glob.glob(os.path.join(data_dir, 'training-j', '*.png'))
+paths_train_k = glob.glob(os.path.join(data_dir, 'training-k', '*.png'))
+#paths_train_h = glob.glob(os.path.join(data_dir, 'training-h', '*.png'))
+paths_train_all = paths_train_a + paths_train_b + paths_train_c + paths_train_d  \
+ + paths_train_e + paths_train_f + paths_train_g + paths_train_h + paths_train_i \
+ + paths_train_j + paths_train_k
 
 paths_test_a = glob.glob(os.path.join(data_dir, 'testing-a', '*.png'))
 paths_test_b = glob.glob(os.path.join(data_dir, 'testing-b', '*.png'))
@@ -48,6 +54,9 @@ path_label_train_d = os.path.join(data_dir, 'training-d.csv')
 path_label_train_f = os.path.join(data_dir, 'training-d.csv')
 path_label_train_g = os.path.join(data_dir, 'training-b.csv')
 path_label_train_h = os.path.join(data_dir, 'training-d.csv')
+path_label_train_i = os.path.join(data_dir, 'training-b.csv')
+path_label_train_j = os.path.join(data_dir, 'training-d.csv')
+path_label_train_k = os.path.join(data_dir, 'training-d.csv')
 
 
 def get_key(path):
@@ -62,7 +71,7 @@ def get_data(paths_img, path_label=None, resize_dim=None):
     for i, path in enumerate(paths_img):
         img = cv2.imread(path, cv2.IMREAD_COLOR)  # images loaded in color (BGR)
         # img = cv2.fastNlMeansDenoisingColored(img,None,10,10,7,21)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # cnahging colorspace to GRAY
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # cnahging colorspace to GRAY
         if resize_dim is not None:
             img = cv2.resize(img, (resize_dim, resize_dim), interpolation=cv2.INTER_AREA)  # resize image to 28x28
         # X.append(np.expand_dims(img,axis=2)) # expand image to 28x28x1 and append to the list.
@@ -149,15 +158,19 @@ X_train_e, y_train_e = get_data(paths_train_e, path_label_train_e, resize_dim=RE
 X_train_f, y_train_f = get_data(paths_train_f, path_label_train_f, resize_dim=RESIZE_DIM)
 X_train_g, y_train_g = get_data(paths_train_g, path_label_train_g, resize_dim=RESIZE_DIM)
 X_train_h, y_train_h = get_data(paths_train_h, path_label_train_h, resize_dim=RESIZE_DIM)
+X_train_i, y_train_i = get_data(paths_train_i, path_label_train_i, resize_dim=RESIZE_DIM)
+X_train_j, y_train_j = get_data(paths_train_j, path_label_train_j, resize_dim=RESIZE_DIM)
+X_train_k, y_train_k = get_data(paths_train_k, path_label_train_k, resize_dim=RESIZE_DIM)
 
-X_train_all = np.concatenate((X_train_a, X_train_b, X_train_c, X_train_d, X_train_e,X_train_f,X_train_g,X_train_h), axis=0)
-y_train_all = np.concatenate((y_train_a, y_train_b, y_train_c, y_train_d, y_train_e,y_train_f,y_train_g,y_train_h), axis=0)
+
+X_train_all = np.concatenate((X_train_a, X_train_b, X_train_c, X_train_d, X_train_e,X_train_f,X_train_g,X_train_h,X_train_i,X_train_j,X_train_k), axis=0)
+y_train_all = np.concatenate((y_train_a, y_train_b, y_train_c, y_train_d, y_train_e,y_train_f,y_train_g,y_train_h,y_train_i,y_train_j,y_train_k), axis=0)
 X_train_all.shape, y_train_all.shape
 
 X_test_a = get_data(paths_test_a, resize_dim=RESIZE_DIM)
 X_test_b = get_data(paths_test_b, resize_dim=RESIZE_DIM)
 X_test_c = get_data(paths_test_c, resize_dim=RESIZE_DIM)
-X_test_d = get_data(paths_test_d, resize_dim=RESIZE_DIM)
+X_test_d = get_data(paths_test_d, resize_dim=RESIZE_DIM)load
 X_test_e = get_data(paths_test_e, resize_dim=RESIZE_DIM)
 X_test_f = get_data(paths_test_f, resize_dim=RESIZE_DIM)
 X_test_auga = get_data(paths_test_auga, resize_dim=RESIZE_DIM)
@@ -167,8 +180,12 @@ X_test_all = np.concatenate((X_test_a, X_test_b, X_test_c, X_test_d, X_test_e, X
 X_tshow_all = X_test_all
 X_tshow_all.shape
 
-X_train_all = X_train_all.reshape(X_train_all.shape[0], 28, 28, 1).astype('float32')
-X_test_all = X_test_all.reshape(X_test_all.shape[0], 28, 28, 1).astype('float32')
+X_train_all = np.load("preprocessed_before_reshaping_64.npy")
+X_test_all = np.load("preprocessed_before_reshaping_test_64.npy")
+y_train_all = np.load("preprocessed_before_reshaping_y_64.npy")
+
+X_train_all = X_train_all.reshape(X_train_all.shape[0], 64,64, 1).astype('float32')
+X_test_all = X_test_all.reshape(X_test_all.shape[0], 64,64, 1).astype('float32')
 
 X_train_all.shape
 
@@ -210,58 +227,244 @@ datagen.fit(X_train)
 datagen.fit(X_val)
 
 
-def my_model(img_size=28, channels=1):
+#def my_model(img_size=28, channels=1):
+#    model = Sequential()
+#    input_shape = (img_size, img_size, channels)
+#    model.add(Conv2D(32, (5, 5), input_shape=input_shape, activation='relu', padding='same'))
+#    model.add(Conv2D(32, (5, 5), activation='relu', padding='same'))
+#    model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+#    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+#
+#    model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+#    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+#    model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+#    model.add(Flatten())
+#    model.add(Dense(64))
+#    model.add(Activation('relu'))
+#    model.add(Dropout(0.2))
+#    model.add(Dense(10))
+#    model.add(Activation('softmax'))
+#
+#    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+#    # UNCOMMENT THIS TO VIEW THE ARCHITECTURE
+#    # model.summary()
+#
+#    return model
+#
+#
+#model = my_model()
+#model.summary()
+#
+#
+#
+###alexnet model
+from keras.layers.normalization import BatchNormalization
+#def alexnet(img_size=64,channels=1):
+#    model = Sequential()
+##    input_shape = (img_size,img_size,channels)
+#    model.add(Conv2D(64, (11,11), input_shape=(64,64,1),activation='relu', padding='same'))
+#    # 64*64*64
+#    model.add(Conv2D(64, ( 11, 11), padding='same'))
+#    # 64*64*64
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    model.add(MaxPooling2D((2,2), strides=(2,2)))
+#    # 32*32*64
+#    
+#    model.add(Conv2D(128, ( 7, 7), padding='same'))
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    # 32*32*128
+#    model.add(MaxPooling2D((2,2), strides=(2,2)))
+#    # 16*16*128
+#    model.add(Conv2D(192, (3, 3), padding='same'))
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    # 16*16*192
+#    model.add(MaxPooling2D((2,2), strides=(2,2)))
+#    # 8*8*192
+#    
+#    model.add(Conv2D(256,  (3, 3), padding='same'))
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    # 8*8*256
+#    model.add(MaxPooling2D((2,2), strides=(2,2)))
+#    # 4*4*256
+#    
+#    model.add(Flatten())
+#    model.add(Dense(4096))
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    model.add(Dropout(0.4))
+#    model.add(Dense(2096))
+#    model.add(BatchNormalization())
+#    model.add(Activation('relu'))
+#    model.add(Dropout(0.4))
+#    model.add(Dense(10))
+#    model.add(BatchNormalization())
+#    model.add(Activation('softmax'))
+#    model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
+#    model.summary()
+#    return model
+#
+#model = alexnet()
+#model.summary()
+#
+###############################
+#
+#
+##vgg 16 modified
+from keras.layers.normalization import BatchNormalization
+from keras.optimizers import SGD
+from keras.layers.convolutional import Convolution2D, ZeroPadding2D
+def VGG_16(weights_path=None):
     model = Sequential()
-    input_shape = (img_size, img_size, channels)
-    model.add(Conv2D(32, (5, 5), input_shape=input_shape, activation='relu', padding='same'))
-    model.add(Conv2D(32, (5, 5), activation='relu', padding='same'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(Conv2D(32, (5, 5), input_shape=(64,64,1), padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(64, (3, 3), activation='relu'))
+    #output size = 64*64*64
+#    model.add(MaxPooling2D((2,2), strides=(2,2))) 
+    
+    model.add(Conv2D(32, (5, 5),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(64, (3, 3), activation='relu'))
+    #output size = 64*64*64
+    model.add(MaxPooling2D((2,2), strides=(2,2))) 
+    #output size = 32*32*64
+  #  model.add(ZeroPadding2D((1,1),input_shape=(3,224,224)))
+    model.add(Conv2D(64, (3, 3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+  #  model.add(ZeroPadding2D((1,1),input_shape=(64,64,1)))
+  #  model.add(Conv2D(64, (3, 3), activation='relu'))
+    #output size = 64*64*64
+    
+    model.add(Conv2D(64, (3, 3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(64, (3, 3), activation='relu'))
+    #output size = 64*64*64
+    model.add(MaxPooling2D((2,2), strides=(2,2))) 
+    #output size = 32*32*64
 
-    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
-    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3,3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(128, (3, 3), activation='relu'))
+    #output size = 32*32*128
+    
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(Conv2D(128, (3,3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    #output size = 32*32*128
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+    #output size = 16*16*128
+    
+    model.add(Conv2D(256, (3,3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+ #   model.add(Conv2D(256, (3, 3), activation='relu'))
+    #output size = 16*16*256
+    model.add(Conv2D(256, (3,3),  padding='same'))
+ #   model.add(BatchNormalization())
+    model.add(Activation('relu'))
+ #   model.add(ZeroPadding2D((1,1)))
+ #   model.add(Conv2D(256, (3, 3), activation='relu'))
+    #output size = 16*16*256
+ #   model.add(ZeroPadding2D((1,1)))
+ #   model.add(Conv2D(256, (3, 3), activation='relu'))
+    model.add(Conv2D(256, (3,3),  padding='same'))
+  #  model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    #output size = 16*16*256
+    model.add(MaxPooling2D((2,2), strides=(2,2)))
+    #output size = 8*8*256
 
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
-    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+ #   model.add(ZeroPadding2D((1,1)))
+ #   model.add(Conv2D(512, (3, 3), activation='relu'))
+   #  model.add(Conv2D(512, (3,3), activation='relu', padding='same'))
+  #  model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(512, (3, 3), activation='relu'))
+ #   model.add(Conv2D(512, (3,3), activation='relu', padding='same'))
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(512, (3, 3), activation='relu'))
+  #   model.add(Conv2D(512, (3,3), activation='relu', padding='same'))
+    # 8*8*512
+  #   model.add(MaxPooling2D((2,2), strides=(2,2)))
+    # 4*4*512
+#
+ #   model.add(ZeroPadding2D((1,1)))
+  #  model.add(Conv2D(512, (3, 3), activation='relu',padding='same'))
+  #  model.add(ZeroPadding2D((1,1)))
+   # model.add(Conv2D(512, (3, 3), activation='relu',padding='same'))
+  #  model.add(ZeroPadding2D((1,1)))
+   # model.add(Conv2D(512, (3, 3), activation='relu',padding='same'))
+  #  model.add(MaxPooling2D((2,2), strides=(2,2))) 
 
     model.add(Flatten())
-    model.add(Dense(64))
-    model.add(Activation('relu'))
+#    model.add(Dense(64, activation='relu'))
+ #   model.add(Dropout(0.2))
+    model.add(Dense(64, activation='relu'))
     model.add(Dropout(0.2))
-    model.add(Dense(10))
-    model.add(Activation('softmax'))
-
+    model.add(Dense(10, activation='softmax'))
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
-    # UNCOMMENT THIS TO VIEW THE ARCHITECTURE
-    # model.summary()
+    #sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+  #  opt = SGD(lr=0.01)
+  
+    model.compile(loss = "categorical_crossentropy", optimizer = "adam",metrics=['accuracy'])
+
+    if weights_path:
+        model.load_weights(weights_path)
 
     return model
-
-
-model = my_model()
+model = VGG_16()
 model.summary()
 
-path_model = 'model_filter.h5'  # save model at this location after each epoch
+#################################################################
+
+
+#path_model = 'model_filter.h5'
+#### alesnet weight
+#path_model = 'model_filter_alexnet.h5'
+##vgg16
+path_model = 'vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'
+ # save model at this location after each epoch
 K.tensorflow_backend.clear_session()  # destroys the current graph and builds a new one
-model = my_model()  # create the model
-K.set_value(model.optimizer.lr, 1e-3)  # set the learning rate
-# fit the model
+model =VGG_16()  # create the model
+K.set_value(model.optimizer.lr, 6e-4)  # set the learning rate
+# fit the model  # get 
 h = model.fit(x=X_train,
               y=y_train,
-              batch_size=128,
-              epochs=9,
+              batch_size=64,
+              epochs=25,
               verbose=1,
               validation_data=(X_val, y_val),
               shuffle=True,
               callbacks=[
-                  ModelCheckpoint(filepath=path_model),
+                  ModelCheckpoint(filepath=path_model)
               ]
               )
 
 #model.load_weights('model_filter.h5')
-predictions_prob = model.predict(X_test_all)  # get predictions for all the testing data
+model.load_weights('vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5')
+predictions_prob = model.predict(X_test_all)
+
+#predictions for all the testing data
 
 # Let's observe a few pedictions.
 
@@ -272,7 +475,7 @@ ind = np.random.randint(0, len(X_test_all), size=n_sample)
 # Create Submission
 labels = [np.argmax(pred) for pred in predictions_prob]
 keys = [get_key(path) for path in paths_test_all]
-create_submission(predictions=labels, keys=keys, path='benzema18.csv')
+create_submission(predictions=labels, keys=keys, path='benzema36.csv')
 
 
 ##############################################################
@@ -312,7 +515,7 @@ def test_data(resize_dim, paths, start, columns, rows, w, h):
     return x_pred, X_labels, x_orig, X
 
 
-test_pred, test_labels, orig, processed = test_data(28, paths_test_auga, 50, 2, 10, 50, 50)
+test_pred, test_labels, orig, processed = test_data(28, paths_test_augc, 50, 2, 10, 50, 50)
 
 #from PIL import Image
 #from IPython.display import Image
@@ -326,11 +529,12 @@ rows = 200
 for i in range(1, columns * rows + 1):
     #j = 1
     print("no: %d" %i)
+    print(paths_test_augc[i])
     #j = j+ 1
-    fig = plt.figure(figsize=(100, 100))
-    img = cv2.imread(paths_test_auga[i], cv2.IMREAD_COLOR)
+    fig = plt.figure(figsize=(150,150))
+    img = cv2.imread(paths_test_augc[i], cv2.IMREAD_COLOR)
     ax = plt.subplot(rows, 1, i)
-    ax.set_title("prediction: %d" % test_labels[i],size = 4)
+    ax.set_title("prediction: %d" % test_labels[i],size = 10)
     ax.imshow(img)
     plt.show()
     

@@ -347,7 +347,8 @@ labels=[np.argmax(pred) for pred in predictions_prob]
 keys=[get_key(path) for path in paths_test_all ]
 create_submission(predictions=labels,keys=keys,path='sampleSubmission.csv')
 
-def alexnet(img_size=128,channels=1):
+from keras import BatchNormalization
+def alexnet(img_size=64,channels=1):
     model = Sequential()
     input_shape = (img_size,img_size,channels)
     model.add(Conv2D(64, (11,11), input_shape=input_shape,activation='relu', padding='same'))
@@ -361,10 +362,10 @@ def alexnet(img_size=128,channels=1):
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(3, 3)))
     
-    model.add(Conv2D(192, (3, 3), padding='same'))
-    model.add(BatchNormalization())
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(3, 3)))
+ #   model.add(Conv2D(192, (3, 3), padding='same'))
+  #  model.add(BatchNormalization())
+   # model.add(Activation('relu'))
+   # model.add(MaxPooling2D(pool_size=(3, 3)))
     
     model.add(Conv2D(256,  (3, 3), padding='same'))
     model.add(BatchNormalization())
@@ -375,10 +376,12 @@ def alexnet(img_size=128,channels=1):
     model.add(Dense(4096, init='normal'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
+    model.add(Dropout(0.4))
     model.add(Dense(4096, init='normal'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    model.add(Dense(1000, init='normal'))
+    model.add(Dropout(0.4))
+    model.add(Dense(10, init='normal'))
     model.add(BatchNormalization())
     model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
@@ -386,6 +389,7 @@ def alexnet(img_size=128,channels=1):
     return model
 
 model = alexnet()
+model.summary()
 def my_model(img_size=28,channels=1):
     model = Sequential()
     input_shape = (img_size,img_size,channels)
